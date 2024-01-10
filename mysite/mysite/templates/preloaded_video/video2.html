@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+{% block extra_css %}
+    <style>
+      body{
+        padding-top: 100px;
+      }
+    </style>
+{% endblock %}
+
+{% block content %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+<center><h1 class="display-4">{{ page.name_title }}</h1></center>
+<div>
+    <center><p>{{ page.name_subtitle|richtext }}</p></center>
+</div>
+
+<style>
+  .dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-container select {
+    appearance: none;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    padding: 12px 40px 12px 24px;
+    font-size: 18px;
+    color: #555555;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
+    background-size: 100% 200%;
+    background-position: 0 0;
+  }
+
+  .dropdown-container select:focus {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background-position: 0 -100%;
+  }
+
+  .dropdown-container::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 6px 0 6px;
+    border-color: #aaa transparent transparent transparent;
+    pointer-events: none;
+  }
+  
+  .dropdown-container select option {
+    background-color: #ffffff;
+    color: #555555;
+    padding: 12px 24px;
+    font-size: 18px;
+  }
+  
+  .dropdown-container select option:hover {
+    background-color: #f2f2f2;
+  }
+</style>
+
+<div class = "dropdown-container" style="padding-left: 1%;">
+  <select id="video-dropdown">
+    <option value="compilation" selected>Manly & Dee Why Compilation</option>
+    <option value="queenscliff">Queenscliff</option>
+  </select>
+</div>
+
+<div class="container-fluid" style="height: 100%; padding-top: 3%; display: flex; overflow: auto; padding-left: 1%;">
+  <div class="videoWrapper">
+    <style>
+      .videoWrapper iframe {
+        display: block;
+        height: 1020px;
+        width: 1250px;
+        border: 2px solid #ccc;
+        margin-bottom: 200px;
+        position: relative;
+      }
+    </style>
+    <iframe id="frame1" class="responsive-iframe" src="" title="YouTube video player" frameborder="0" scrolling="no"></iframe>
+  </div>
+
+  <div style="display: flex; flex-direction: column; justify-content: flex-start; padding-left: 1%;">
+    <style>
+      .btn-toggle, .btn-newtab {
+        background-color: #4285f4;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .btn-toggle:hover, .btn-newtab:hover {
+        background-color: #357ae8;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #a1d3ff;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #357ae8;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #357ae8;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+    </style>
+    <div class="row" style="padding-bottom: 12%; padding-left: 1.45%;">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-xl-4 col-md-6" style="padding-left: 7.25%;">
+            <label class="switch">
+              <input type="checkbox" onclick="toggleVideoAI()" id="toggleButton" name="toggleButton" disabled>
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="col-xl-8 col-md-6" style="padding-left: 13%;">
+            <span id="toggletext" class="font-weight-bold" style="font-size: 22px; display: inline-block; text-align: left;">AI</span>
+          </div>
+        </div>    
+        <!-- <button type="button" onclick="toggleVideoAI()" id="toggleButton" class="btn btn-toggle" name="toggleButton" disabled>Video Feed</button> -->
+        </div>
+    </div>
+    <div style="padding-bottom: 20%;">
+      <button type="button" id="ntbtn1" class="btn btn-newtab" name="button" style="color: white" disabled>View in new tab</button>
+    </div>
+    <span id = "people" class="font-weight-light" style="padding-left: 1.45%;">People on the beach:</span>
+    <span id = "bbox_count" class="font-weight-bold" style="padding-left: 1.45%;"></span>
+    <br>
+    <span id = "crowdedness_text" class="font-weight-light" style="padding-left: 1.45%;">Crowdedness level:</span>
+    <span id = "crowdedness" class="font-weight-bold" style="padding-left: 1.45%;"></span>
+  </div>
+</div>
+
+
+<!-- </center> -->
+{% endblock %}
+{% block extra_js %}
+
+    <script type="text/javascript">
+      var url = "../preloaded_video_feed/";
+      var source = ""
+      document.getElementById("ntbtn1").addEventListener("click", function() {
+        window.open(url, "_blank");
+      });
+
+      var videoMode = false; // Initial mode is video mode
+
+      function toggleVideoAI() {
+        var iframevar1 = document.getElementById('frame1');
+        var nt1 = document.getElementById('ntbtn1');
+        var toggletext = document.getElementById('toggletext')
+
+        if (!videoMode) {
+          if (source == "queenscliff") {
+            var a = "../preloaded_video_feed_2/"
+          }
+          else if (source == "compilation") {
+            var a = "../preloaded_video_feed/"; // Switch to video feed mode
+          }
+          document.getElementById('toggleButton').textContent = "AI";
+          document.getElementById('bbox_count').textContent = ""; // Clear the bounding box count
+          document.getElementById('crowdedness').textContent = "" // Clear crowdedness level on the webpage
+          document.getElementById('people').textContent = "" // Clear number of people text on the webpage
+          document.getElementById('crowdedness_text').textContent = "" // Clear crowdedness text on the webpage
+        } else {
+          if (source == "queenscliff") {
+            var a = "../preloaded_video_feed_AI_2/"
+          }
+          else if (source == "compilation") {
+            var a = "../preloaded_video_feed_AI/"; // Switch to AI mode
+          }
+          document.getElementById('toggleButton').textContent = "Video Feed";
+        }
+
+        iframevar1.src = a;
+        url = a;
+        videoMode = !videoMode; // Toggle the mode
+
+        document.getElementById('toggleButton').disabled = false;
+        document.getElementById('ntbtn1').disabled = false;
+      }
+
+      // Call the toggleVideoAI() function initially to switch to the video feed mode
+      toggleVideoAI();
+
+      function updateBoundingBoxCount() {
+        var request_path
+        if (source == "queenscliff") {
+            request_path = "../get_bbox_count_preloaded_2/"
+          }
+          else if (source == "compilation") {
+            request_path = "../get_bbox_count_preloaded/"; 
+          }
+        if (!videoMode) {
+          fetch(request_path)
+            .then(response => response.json())
+            .then(data => {
+              document.getElementById('bbox_count').textContent = data.bboxCount;
+              document.getElementById('crowdedness').textContent = data.crowdedness;
+              document.getElementById('people').textContent = "People on the beach:"
+              document.getElementById('crowdedness_text').textContent = "Crowdedness level:" 
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
+        setTimeout(updateBoundingBoxCount, 1000);
+      }
+
+      updateBoundingBoxCount();
+
+      function changeVideoSource() {
+        var dropdown = document.getElementById("video-dropdown");
+        var selectedOption = dropdown.options[dropdown.selectedIndex].value;
+        var iframe = document.getElementById("frame1");
+        // reset to normal video mode after different source selected
+        if(!videoMode){
+          document.getElementById("toggleButton").checked = false;
+          toggleVideoAI()
+        }
+
+        // Set the new video source based on the selected option
+        var videoSource = ""
+        if (selectedOption === "queenscliff") {
+          source = "queenscliff"
+          videoSource = "/preloaded_video_feed_2/";
+        } else if (selectedOption === "compilation") {
+          source = "compilation"
+          videoSource = "/preloaded_video_feed/";
+        }
+
+        // Update the iframe source
+        iframe.src = videoSource;
+        url = videoSource
+      }
+
+      // Add an event listener to the dropdown to trigger the video source change
+      document.getElementById("video-dropdown").addEventListener("change", changeVideoSource);
+
+      changeVideoSource()
+
+
+
+    </script>
+    
+
+{% endblock %}

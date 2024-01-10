@@ -1,0 +1,7 @@
+
+        train: /content/gdrive/MyDrive/yolo_dataset_notebook/yolo_dataset_merged/train
+        val: /content/gdrive/MyDrive/yolo_dataset_notebook/yolo_dataset_merged/val
+
+        nc: 1
+        names: ['person']
+        

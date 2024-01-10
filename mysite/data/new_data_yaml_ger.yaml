@@ -1,0 +1,8 @@
+
+        train: /root/seagull_eye/train/
+        val: /root/seagull_eye/valid/
+        test: /root/seagull_eye/test/
+
+        nc: 1
+        names: ['person']
+        
