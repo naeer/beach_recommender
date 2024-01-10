@@ -58,3 +58,10 @@ The aim of this project was to build an app that would allow beachgoers to find 
   ```sh
   http://127.0.0.1:8000/
   ```
+
+Contributors to this project
+- Naeer Amin
+- Gerardo Bohorquez
+- Javier Chapto
+
+This web app was built on top of the skeleton web app developed by Gitarth Vaishnav as part of the 42028 Deep Learning course. [Link to Gitarth's repo](https://github.com/GitarthVaishnav/Basic_Web_App)
